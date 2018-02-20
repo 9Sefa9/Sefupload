@@ -1,14 +1,13 @@
 package controller;
 
+import generator.IDGenerator;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -24,11 +23,24 @@ public class Controller {
     private double xOffset = 0, yOffset=0;
     @FXML private Pane pane;
     @FXML private ListView<File> uploadList;
+    @FXML private Label idLabel;
+    @FXML private Button deleteButton;
 
-    public Controller(){
+    public Controller() throws InterruptedException {
+
+    }
+    @FXML
+    public void initialize(){
         model = new Model();
-        uploadList = new ListView<>();
         uploadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        idLabel.setText("Deine ID: "+Long.toString(IDGenerator.generate()));
+    }
+    @FXML
+    public void deleteButtonData(){
+
+    }
+    @FXML
+    public void sendButtonData(){
 
     }
     @FXML

@@ -13,9 +13,9 @@
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" onMouseDragged="#windowDragged" onMousePressed="#windowPressed" prefHeight="560.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <children>
-      <ProgressBar fx:id="receiveBar" layoutX="124.0" layoutY="526.0" prefHeight="17.0" prefWidth="206.0" progress="0.0" style="-fx-border-color: rgba(50,50,50,255);" />
-      <ProgressBar fx:id="sendBar" layoutX="124.0" layoutY="494.0" prefHeight="20.0" prefWidth="206.0" progress="0.0" style="-fx-border-color: rgba(50,50,50,255);" />
-      <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="23.0" layoutY="37.0" prefHeight="33.0" prefWidth="407.0" text="Große Dateien versenden!" textAlignment="CENTER" textFill="#2688ff" textOverrun="CLIP">
+      <ProgressBar fx:id="receiveBar" layoutX="124.0" layoutY="526.0" prefHeight="17.0" prefWidth="206.0" progress="0.0" style="-fx-border-color: rgb(25,142,112);" />
+      <ProgressBar fx:id="sendBar" layoutX="124.0" layoutY="494.0" prefHeight="20.0" prefWidth="206.0" progress="0.38" style="-fx-border-color: rgb(25,142,112);" />
+      <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="23.0" layoutY="37.0" prefHeight="33.0" prefWidth="407.0" text="Große Dateien versenden!" textAlignment="CENTER" textFill="#198e70" textOverrun="CLIP">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
          </cursor>
@@ -31,7 +31,7 @@
             <Font name="Gadugi" size="12.0" />
          </font>
       </Label>
-      <Button fx:id="chooseData" layoutX="42.0" layoutY="112.0" mnemonicParsing="false" onAction="#chooseDataButton" prefHeight="103.0" prefWidth="366.0" style="-fx-background-color: rgb(38,139,255);;" textAlignment="CENTER">
+      <Button fx:id="chooseData" layoutX="42.0" layoutY="112.0" mnemonicParsing="false" onAction="#chooseDataButton" prefHeight="103.0" prefWidth="366.0" style="-fx-background-color: rgb(25,142,112);" textAlignment="CENTER">
          <font>
             <Font size="50.0" />
          </font>
@@ -49,8 +49,8 @@
                </graphic>
             </Label>
          </graphic></Button>
-      <ListView fx:id="uploadList" layoutX="42.0" layoutY="228.0" prefHeight="200.0" prefWidth="366.0" style="-fx-background-color: rgb(38,139,255);" />
-      <Button fx:id="deleteButton" layoutX="42.0" layoutY="439.0" mnemonicParsing="false" onAction="#chooseDataButton" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(38,139,255);;" textAlignment="CENTER">
+      <ListView fx:id="uploadList" layoutX="42.0" layoutY="228.0" prefHeight="200.0" prefWidth="366.0" style="-fx-background-color: rgb(25,142,112);" />
+      <Button fx:id="deleteButton" layoutX="42.0" layoutY="439.0" mnemonicParsing="false" onAction="#deleteButtonData" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(25,142,112);" textAlignment="CENTER">
          <font>
             <Font size="22.0" />
          </font>
@@ -69,7 +69,7 @@
             </Label>
          </graphic>
       </Button>
-      <Button fx:id="sendButton" layoutX="163.0" layoutY="439.0" mnemonicParsing="false" onAction="#chooseDataButton" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(38,139,255);;" textAlignment="CENTER">
+      <Button fx:id="sendButton" layoutX="163.0" layoutY="439.0" mnemonicParsing="false" onAction="#sendButtonData" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(25,142,112);" textAlignment="CENTER">
          <font>
             <Font size="22.0" />
          </font>
@@ -88,7 +88,7 @@
             </Label>
          </graphic>
       </Button>
-      <TextField layoutX="280.0" layoutY="439.0" prefHeight="45.0" prefWidth="128.0" promptText="ID des Partners">
+      <TextField fx:id="textFieldID" layoutX="280.0" layoutY="439.0" prefHeight="45.0" prefWidth="128.0" promptText="ID des Partners">
          <font>
             <Font name="Gadugi" size="15.0" />
          </font>
@@ -102,10 +102,6 @@
             </ImageView>
          </graphic></Button>
       <Button fx:id="minimizeButton" alignment="TOP_CENTER" layoutX="329.0" layoutY="12.0" mnemonicParsing="false" onAction="#minimizeWindow" prefHeight="25.0" prefWidth="37.0" stylesheets="@../css/XButton.css" text="▬" textAlignment="CENTER" />
-      <Label layoutX="12.0" layoutY="14.0" text="Deine ID:">
-         <font>
-            <Font name="Gadugi" size="15.0" />
-         </font>
-      </Label>
+      <Label fx:id="idLabel" layoutX="28.0" layoutY="16.0" text="Label" />
    </children>
 </Pane>
