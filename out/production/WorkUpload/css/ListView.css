@@ -1,0 +1,24 @@
+.list-view, .list-view:focused, .list-view:selected {
+    -fx-control-inner-background: transparent;
+    -fx-control-inner-background-alt: -fx-control-inner-background;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-fit-to-width: true;
+    -fx-effect: null;
+    -fx-selection-bar: transparent;
+    -fx-selection-bar-non-focused: transparent;
+}
+
+.list-view .list-cell:filled:selected:focused, .list-view .list-cell:filled:selected {
+    -fx-background-color: #ff9279;
+    -fx-effect: null;
+}
+
+.list-view .list-cell:filled:hover {
+    -fx-background-color: transparent;
+    -fx-effect: null;
+}
+.list-cell
+{
+    -fx-font: 15px Gadugi;
+}
