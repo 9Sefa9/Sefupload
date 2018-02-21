@@ -73,20 +73,6 @@
          <font>
             <Font size="22.0" />
          </font>
-         <graphic>
-            <Label prefHeight="6.0" prefWidth="80.0" text="Senden" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Gadugi" size="15.0" />
-               </font>
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../pictures/Industry-Trash-2-icon.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-         </graphic>
       </Button>
       <TextField fx:id="textFieldID" layoutX="280.0" layoutY="439.0" prefHeight="45.0" prefWidth="128.0" promptText="ID des Partners">
          <font>
@@ -102,6 +88,18 @@
             </ImageView>
          </graphic></Button>
       <Button fx:id="minimizeButton" alignment="TOP_CENTER" layoutX="329.0" layoutY="12.0" mnemonicParsing="false" onAction="#minimizeWindow" prefHeight="25.0" prefWidth="37.0" stylesheets="@../css/XButton.css" text="▬" textAlignment="CENTER" />
-      <Label fx:id="idLabel" layoutX="28.0" layoutY="16.0" text="Label" />
+      <Label fx:id="idLabel" layoutX="28.0" layoutY="16.0" text="Deine ID:" />
+      <Label layoutX="175.0" layoutY="451.0" prefHeight="25.0" prefWidth="82.0" text="Senden" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Gadugi" size="15.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../pictures/acmskyuvannucooxdvbb.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
    </children>
 </Pane>
