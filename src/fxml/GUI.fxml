@@ -50,7 +50,7 @@
             </Label>
          </graphic></Button>
       <ListView fx:id="uploadList" layoutX="42.0" layoutY="228.0" prefHeight="200.0" prefWidth="366.0" style="-fx-background-color: rgb(25,142,112);" />
-      <Button fx:id="deleteButton" layoutX="42.0" layoutY="439.0" mnemonicParsing="false" onAction="#deleteButtonData" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(25,142,112);" textAlignment="CENTER">
+      <Button fx:id="deleteButton" layoutX="42.0" layoutY="439.0" mnemonicParsing="false" onAction="#deleteDataButton" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(25,142,112);" textAlignment="CENTER">
          <font>
             <Font size="22.0" />
          </font>
@@ -69,10 +69,24 @@
             </Label>
          </graphic>
       </Button>
-      <Button fx:id="sendButton" layoutX="163.0" layoutY="439.0" mnemonicParsing="false" onAction="#sendButtonData" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(25,142,112);" textAlignment="CENTER">
+      <Button fx:id="sendButton" layoutX="163.0" layoutY="439.0" mnemonicParsing="false" onAction="#sendDataButton" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: rgb(25,142,112);" textAlignment="CENTER">
          <font>
             <Font size="22.0" />
          </font>
+         <graphic>
+            <Label prefHeight="25.0" prefWidth="82.0" text="Senden" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Gadugi" size="15.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pictures/acmskyuvannucooxdvbb.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </graphic>
       </Button>
       <TextField fx:id="textFieldID" layoutX="280.0" layoutY="439.0" prefHeight="45.0" prefWidth="128.0" promptText="ID des Partners">
          <font>
@@ -89,17 +103,5 @@
          </graphic></Button>
       <Button fx:id="minimizeButton" alignment="TOP_CENTER" layoutX="329.0" layoutY="12.0" mnemonicParsing="false" onAction="#minimizeWindow" prefHeight="25.0" prefWidth="37.0" stylesheets="@../css/XButton.css" text="▬" textAlignment="CENTER" />
       <Label fx:id="idLabel" layoutX="28.0" layoutY="16.0" text="Deine ID:" />
-      <Label layoutX="175.0" layoutY="451.0" prefHeight="25.0" prefWidth="82.0" text="Senden" textAlignment="CENTER" textFill="WHITE">
-         <font>
-            <Font name="Gadugi" size="15.0" />
-         </font>
-         <graphic>
-            <ImageView fitHeight="25.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../pictures/acmskyuvannucooxdvbb.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Label>
    </children>
 </Pane>

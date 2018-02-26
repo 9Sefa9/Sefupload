@@ -1,26 +1,26 @@
 package controller;
 
-import generator.IDGenerator;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
 import model.Model;
+import model.Downloader;
+import model.Uploader;
 
 import java.io.*;
-import java.net.InetAddress;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.util.List;
 
 public class Controller {
     private int id;
-    private File file;
+    private List<File> fileList;
     private FileChooser fileChooser;
     private Model model;
     private double xOffset = 0, yOffset=0;
@@ -28,30 +28,30 @@ public class Controller {
     @FXML private ListView<File> uploadList;
     @FXML protected Label idLabel;
     @FXML private Button deleteButton;
+    @FXML private TextField textFieldID;
 
-    public Controller(){
-
-        ThreadClient t = new ThreadClient(this);
-        t.start();
-    }
     @FXML
     public void initialize(){
         model = new Model();
         uploadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        ThreadClient t = new ThreadClient(this);
+        t.start();
     }
-    public int getId(){
-        return this.id;
-    }
+
     public void setId(int id){
         this.id = id;
     }
     @FXML
-    public void deleteButtonData(){
-
+    public void deleteDataButton(){
+        ObservableList<File> selectedFiles = this.uploadList.getSelectionModel().getSelectedItems();
+        System.err.println("DELETE FROM LIST :: "+selectedFiles);
+        this.model.getFileArrayList().removeAll(selectedFiles);
     }
     @FXML
-    public void sendButtonData(){
-
+    public void sendDataButton() throws IOException {
+        Uploader upload= new Uploader();
+        upload.start();
     }
     @FXML
     public void windowDragged(MouseEvent event){
@@ -72,14 +72,13 @@ public class Controller {
 
             //Choose one File
             fileChooser = new FileChooser();
-            fileChooser.setTitle("Select your file!");
-            file = fileChooser.showOpenDialog(new Stage());
+            fileChooser.setTitle("SELECT YOUR FILES!");
+            fileList = fileChooser.showOpenMultipleDialog(new Stage());
 
-            System.out.println("Choosen files location :: "+ file.getAbsoluteFile());
-            model.getFileArrayList().add(file);
+            model.getFileArrayList().addAll(fileList);
 
         }catch(NullPointerException e ){
-            System.err.println("No file was added or selected!");
+            System.err.println("No fileList was added or selected!");
         }
         catch(Exception e ){
             e.printStackTrace();
@@ -93,17 +92,16 @@ public class Controller {
     public void closeProgram(){
         Platform.exit();
     }
-    @FXML
     public Label getIdLabel() {
-        return idLabel;
+        return this.idLabel;
     }
 
-    public void setIdLabel(Label idLabel) {
-        this.idLabel = idLabel;
-
-
-    }
 }
+
+
+
+
+
 class ThreadClient extends Thread{
     private Socket client;
     private BufferedWriter bw;
@@ -118,16 +116,37 @@ class ThreadClient extends Thread{
             client = new Socket("localhost",3121);
             bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
             br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            controller.setId(br.read());
-        }catch(IOException e){
-            e.printStackTrace();
-        }finally {
+            System.out.println("CLIENT => SERVER :: "+ client.getInetAddress().getHostName());
+
+            bw.write("requestID"+"\n");
+            bw.flush();
+
+            bw.write(client.getInetAddress().getHostName()+"\n");
+            bw.flush();
+
+            int newID = br.read();
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    controller.setId(newID);
+                    controller.getIdLabel().setText("Deine ID:"+newID);
+                }
+            });
+
+
+        }catch(ConnectException c){
+            System.err.println("Server connection refused!");
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    controller.getIdLabel().setText("Keine Internetverbindung!");
+                }
+            });
+        }catch(IOException e){e.printStackTrace();}
+        finally{
             try{
-                if(br!=null)
                 br.close();
-                if(bw!=null)
+                client.close();
                 bw.close();
-            }catch (IOException e){
+            }catch (Exception e){
                 e.printStackTrace();
             }
         }
