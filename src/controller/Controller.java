@@ -2,6 +2,7 @@ package controller;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -10,8 +11,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
 import model.Model;
-import model.Downloader;
-import model.Uploader;
+import model.UploadClient;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -29,6 +29,7 @@ public class Controller {
     @FXML protected Label idLabel;
     @FXML private Button deleteButton;
     @FXML private TextField textFieldID;
+    @FXML private ProgressBar sendBar;
 
     @FXML
     public void initialize(){
@@ -50,8 +51,13 @@ public class Controller {
     }
     @FXML
     public void sendDataButton() throws IOException {
-        Uploader upload= new Uploader();
-        upload.start();
+        //UploadClient upload= new UploadClient(this.model);
+       // upload.start();
+
+        Task<Void> task = new UploadClient(this.model);
+        this.sendBar.progressProperty().bind(task.progressProperty());
+        Thread thread = new Thread(task);
+        thread.start();
     }
     @FXML
     public void windowDragged(MouseEvent event){
@@ -143,8 +149,11 @@ class ThreadClient extends Thread{
         }catch(IOException e){e.printStackTrace();}
         finally{
             try{
+                if(br!=null)
                 br.close();
+                if(client!=null)
                 client.close();
+                if(bw!=null)
                 bw.close();
             }catch (Exception e){
                 e.printStackTrace();
