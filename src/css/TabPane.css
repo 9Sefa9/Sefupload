@@ -1,0 +1,14 @@
+.tab-pane *.tab-header-area *.tab-header-background {
+    -fx-background-color:rgb(25,142,112);
+}
+
+.tab {
+    -fx-font-family:Gadugi;
+    -fx-color: white;
+    -fx-font-size: 14;
+    -fx-background-color:rgb(25,142,112);
+}
+
+.tab:selected {
+    -fx-background-color: #ff9279;
+}
