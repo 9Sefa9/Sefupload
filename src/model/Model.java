@@ -12,7 +12,7 @@ public class Model{
     //fileArrayList
     private ObservableList<File> fileArrayList = FXCollections.observableArrayList();
 
-    public ObservableList<File> getFileArrayList() {
+    public synchronized ObservableList<File> getFileArrayList() {
         return fileArrayList;
     }
 

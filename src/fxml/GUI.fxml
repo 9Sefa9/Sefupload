@@ -14,7 +14,7 @@
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" onMouseDragged="#windowDragged" onMousePressed="#windowPressed" prefHeight="560.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <children>
       <ProgressBar fx:id="receiveBar" layoutX="124.0" layoutY="526.0" prefHeight="17.0" prefWidth="206.0" progress="0.0" style="-fx-border-color: rgb(25,142,112);" />
-      <ProgressBar fx:id="sendBar" layoutX="124.0" layoutY="494.0" prefHeight="20.0" prefWidth="206.0" progress="0.0" style="-fx-border-color: rgb(25,142,112);" />
+      <ProgressBar fx:id="sendBar" layoutX="124.0" layoutY="494.0" prefHeight="20.0" prefWidth="206.0" progress="0.0" style="-fx-border-color: rgb(25,142,112);" stylesheets="@../css/ProgressBar.css" />
       <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="23.0" layoutY="37.0" prefHeight="33.0" prefWidth="407.0" text="Große Dateien versenden!" textAlignment="CENTER" textFill="#198e70" textOverrun="CLIP">
          <cursor>
             <Cursor fx:constant="DEFAULT" />

@@ -24,7 +24,7 @@ public class UploadClient extends Task<Void> {
 
 
     @Override
-    protected Void call() throws Exception {
+    protected Void call(){
         try {
             dos = new DataOutputStream(client.getOutputStream());
             //wie viele Elemente sollen verschickt werden ?
@@ -39,7 +39,7 @@ public class UploadClient extends Task<Void> {
                 //wie groß ist ein File ?
                 dos.writeInt(size);
                 dos.flush();
-                Long progressIndexL=null;
+                Long progressIndexL=0L;
                 int tmp;
                 while ((tmp = fis.read(buffer)) != -1) {
                     dos.write(buffer, 0, tmp);
@@ -47,15 +47,16 @@ public class UploadClient extends Task<Void> {
                     updateProgress(progressIndexL,size);
                     //TODO vielleicht, hier einen dos.read setzen, wo der uploader den progress Index bestimmt ? raspb.
                 }
-
+                updateProgress(0,0);
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        //entferne File aus der Liste
-                        model.getFileArrayList().remove(model.getFileArrayList().indexOf(file));
+                        synchronized(model.getFileArrayList()){
+                            while (model.getFileArrayList().indexOf(file)!= -1)
+                            model.getFileArrayList().remove(model.getFileArrayList().indexOf(file));
+                        }
                     }
                 });
-                updateProgress(0,0);
             }
         } catch (IOException e) {
             e.printStackTrace();
