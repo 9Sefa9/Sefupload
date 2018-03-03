@@ -110,7 +110,10 @@
                   <ListView fx:id="uploadList" prefHeight="200.0" prefWidth="366.0" style="-fx-background-color: rgb(25,142,112);" />
                </content>
             </Tab>
-          <Tab text="Download" />
+          <Tab text="Download">
+               <content>
+                  <ListView fx:id="downloadList" prefHeight="200.0" prefWidth="366.0" style="-fx-background-color: rgb(25,142,112);" />
+               </content></Tab>
         </tabs>
       </TabPane>
    </children>

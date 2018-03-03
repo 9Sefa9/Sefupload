@@ -14,7 +14,7 @@ public class IDServer {
     public IDServer(int port){
         try {
             server = new ServerSocket(port);
-            System.out.println("SERVER STARTED");
+            System.out.println("ID-DATABSE SERVER STARTED");
             while(true) {
                 client = server.accept();
                 ThreadClass t = new ThreadClass(client);

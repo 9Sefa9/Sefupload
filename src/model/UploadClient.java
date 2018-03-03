@@ -1,5 +1,6 @@
 package model;
 
+import controller.Controller;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
@@ -9,11 +10,13 @@ import java.net.Socket;
 public class UploadClient extends Task<Void> {
     private Socket client;
     private Model model;
+    private Controller controller;
     private DataOutputStream dos = null;
     private FileInputStream fis = null;
 
-    public UploadClient(Model model) {
+    public UploadClient(Model model, Controller controller) {
         this.model = model;
+        this.controller = controller;
         try {
             client = new Socket("localhost", 3122);
 
@@ -27,11 +30,16 @@ public class UploadClient extends Task<Void> {
     protected Void call(){
         try {
             dos = new DataOutputStream(client.getOutputStream());
+            //ID des Clienten an Server(SQL)?
+            dos.writeInt(controller.getId());
+
             //wie viele Elemente sollen verschickt werden ?
             dos.writeInt(model.getFileArrayList().size());
             dos.flush();
 
             for (File file : model.getFileArrayList()) {
+                dos.writeUTF(file.getName()+"\n");
+                dos.flush();
                 fis = new FileInputStream(file.getAbsolutePath());
                 int size = (int) fis.getChannel().size();
                 byte[] buffer = new byte[size + 2048];
@@ -45,7 +53,6 @@ public class UploadClient extends Task<Void> {
                     dos.write(buffer, 0, tmp);
                     progressIndexL+=tmp;
                     updateProgress(progressIndexL,size);
-                    //TODO vielleicht, hier einen dos.read setzen, wo der uploader den progress Index bestimmt ? raspb.
                 }
                 updateProgress(0,0);
                 Platform.runLater(new Runnable() {

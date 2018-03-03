@@ -1,5 +1,6 @@
 package server;
 
+import java.io.File;
 import java.sql.*;
 import java.util.Random;
 import java.util.UUID;
@@ -39,14 +40,25 @@ public class IDDatabase {
         try{
             stmnt = con.createStatement();
             rs = stmnt.executeQuery("SELECT ClientID, ClientInformation FROM IDTable;");
-
+            //Falls ID im Datenbank vorhanden ist:
             while(rs.next()){
                 if(rs.getString("ClientInformation").equals(this.clientInformation)){
 
                     pstmnt = con.prepareStatement("UPDATE IDTable SET ClientID = ? WHERE ClientInformation = ? AND ClientID = ?;");
-                    pstmnt.setInt(1,generateNewID());
+                    int newerID = generateNewID();
+                    pstmnt.setInt(1,newerID);
                     pstmnt.setString(2,this.clientInformation);
                     pstmnt.setInt(3,rs.getInt("ClientID"));
+
+                    //lösche Ordner des Clienten am Server, da er jetzt ein neues ID hat:
+                    File oldFolder= new File(""+rs.getInt("ClientID"));
+                    if(oldFolder.exists()){
+                        oldFolder.renameTo(new File(""+newerID));
+                    }else if (!oldFolder.exists()){
+                        new File(""+newerID).mkdir();
+                    }
+
+
                     pstmnt.execute();
 
                     stmnt = con.createStatement();
@@ -60,7 +72,7 @@ public class IDDatabase {
                     break;
                 }
             }
-
+            //falls es sich um ein neues User handelt:
             if(this.newID == -1) {
                 pstmnt = con.prepareStatement("INSERT INTO IDTable (ClientID, ClientInformation) VALUES (?,?);");
 
@@ -84,7 +96,6 @@ public class IDDatabase {
             try{
                 con.close();
                 rs.close();
-                pstmnt.close();
 
             }catch(Exception e){
                 e.printStackTrace();

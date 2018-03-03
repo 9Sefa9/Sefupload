@@ -54,7 +54,7 @@ public class Controller {
         //UploadClient upload= new UploadClient(this.model);
        // upload.start();
 
-        Task<Void> task = new UploadClient(this.model);
+        Task<Void> task = new UploadClient(this.model,this);
         this.sendBar.progressProperty().bind(task.progressProperty());
         Thread thread = new Thread(task);
         thread.start();
@@ -102,6 +102,9 @@ public class Controller {
         return this.idLabel;
     }
 
+    public int getId() {
+        return id;
+    }
 }
 
 
