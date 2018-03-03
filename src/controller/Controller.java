@@ -125,7 +125,7 @@ class ThreadClient extends Thread{
             client = new Socket("localhost",3121);
             bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
             br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            System.out.println("CLIENT => SERVER :: "+ client.getInetAddress().getHostName());
+            System.err.println("CLIENT => SERVER :: GET ID FROM DATABASE ..."+ client.getInetAddress().getHostName());
 
             bw.write("requestID"+"\n");
             bw.flush();
@@ -134,6 +134,7 @@ class ThreadClient extends Thread{
             bw.flush();
 
             int newID = br.read();
+            System.err.println("CLIENT => SERVER :: ID RETRIVED..."+ client.getInetAddress().getHostName() +" ID: "+newID);
             Platform.runLater(new Runnable() {
                 @Override public void run() {
                     controller.setId(newID);

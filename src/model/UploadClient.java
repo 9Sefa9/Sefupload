@@ -38,7 +38,7 @@ public class UploadClient extends Task<Void> {
             dos.flush();
 
             for (File file : model.getFileArrayList()) {
-                dos.writeUTF(file.getName()+"\n");
+                dos.writeUTF(file.getName());
                 dos.flush();
                 fis = new FileInputStream(file.getAbsolutePath());
                 int size = (int) fis.getChannel().size();
