@@ -32,6 +32,11 @@ public class UploadClient extends Task<Void> {
             dos = new DataOutputStream(client.getOutputStream());
             //ID des Clienten an Server(SQL)?
             dos.writeInt(controller.getId());
+            dos.flush();
+
+            //ID des anderen Clienten (Ziel Client)
+            dos.writeInt(Integer.parseInt(controller.getTextFieldID().getText()));
+            dos.flush();
 
             //wie viele Elemente sollen verschickt werden ?
             dos.writeInt(model.getFileArrayList().size());

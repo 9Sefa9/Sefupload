@@ -36,28 +36,27 @@ public class Controller {
         model = new Model();
         uploadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        ThreadClient t = new ThreadClient(this);
+        ThreadClientID t = new ThreadClientID(this);
         t.start();
     }
 
-    public void setId(int id){
-        this.id = id;
-    }
     @FXML
     public void deleteDataButton(){
-        ObservableList<File> selectedFiles = this.uploadList.getSelectionModel().getSelectedItems();
-        System.err.println("DELETE FROM LIST :: "+selectedFiles);
-        this.model.getFileArrayList().removeAll(selectedFiles);
+        if(!this.model.getFileArrayList().isEmpty()) {
+            ObservableList<File> selectedFiles = this.uploadList.getSelectionModel().getSelectedItems();
+            System.err.println("DELETE FROM LIST :: " + selectedFiles);
+            this.model.getFileArrayList().removeAll(selectedFiles);
+        }
     }
     @FXML
     public void sendDataButton() throws IOException {
-        //UploadClient upload= new UploadClient(this.model);
-       // upload.start();
 
-        Task<Void> task = new UploadClient(this.model,this);
-        this.sendBar.progressProperty().bind(task.progressProperty());
-        Thread thread = new Thread(task);
-        thread.start();
+        if(!this.model.getFileArrayList().isEmpty() && this.id>0 && (!this.textFieldID.getText().isEmpty() && this.textFieldID.getText().matches("[0-9]+") && this.textFieldID.getText().length() > 3)){
+            Task<Void> task = new UploadClient(this.model, this);
+            this.sendBar.progressProperty().bind(task.progressProperty());
+            Thread thread = new Thread(task);
+            thread.start();
+        }
     }
     @FXML
     public void windowDragged(MouseEvent event){
@@ -101,22 +100,30 @@ public class Controller {
     public Label getIdLabel() {
         return this.idLabel;
     }
-
+    public void setId(int id){
+        this.id = id;
+    }
     public int getId() {
         return id;
+    }
+
+    public TextField getTextFieldID() {
+        return textFieldID;
+    }
+
+    public void setTextFieldID(TextField textFieldID) {
+        this.textFieldID = textFieldID;
     }
 }
 
 
 
-
-
-class ThreadClient extends Thread{
+class ThreadClientID extends Thread{
     private Socket client;
     private BufferedWriter bw;
     private BufferedReader br;
     private Controller controller;
-    public ThreadClient(Controller controller){
+    public ThreadClientID(Controller controller){
         this.controller = controller;
     }
     @Override
