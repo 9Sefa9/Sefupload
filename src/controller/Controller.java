@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
+import model.DownloadClient;
 import model.Model;
 import model.UploadClient;
 
@@ -26,10 +27,12 @@ public class Controller {
     private double xOffset = 0, yOffset=0;
     @FXML private Pane pane;
     @FXML private ListView<File> uploadList;
+    @FXML private ListView<File> downloadList;
     @FXML protected Label idLabel;
     @FXML private Button deleteButton;
     @FXML private TextField textFieldID;
     @FXML private ProgressBar sendBar;
+
 
     @FXML
     public void initialize(){
@@ -38,6 +41,11 @@ public class Controller {
 
         ThreadClientID t = new ThreadClientID(this);
         t.start();
+
+        Thread t2 = new Thread(new DownloadClient(this));
+        t2.start();
+
+
     }
 
     @FXML
@@ -113,6 +121,10 @@ public class Controller {
 
     public void setTextFieldID(TextField textFieldID) {
         this.textFieldID = textFieldID;
+    }
+
+    public ListView<File> getDownloadList() {
+        return downloadList;
     }
 }
 

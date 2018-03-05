@@ -101,6 +101,7 @@ public class IDDatabase {
                 e.printStackTrace();
             }
         }
+
         return this.newID;
     }
     public synchronized int generateNewID(){

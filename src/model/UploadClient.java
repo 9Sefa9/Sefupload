@@ -30,7 +30,7 @@ public class UploadClient extends Task<Void> {
     protected Void call(){
         try {
             dos = new DataOutputStream(client.getOutputStream());
-            //ID des Clienten an Server(SQL)?
+            //ID des Clienten
             dos.writeInt(controller.getId());
             dos.flush();
 
