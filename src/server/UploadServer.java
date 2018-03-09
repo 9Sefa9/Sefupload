@@ -53,12 +53,11 @@ class  ThreadUploadServer implements Runnable{
                 //in @IDDatabase wird ein Ordner erstellt, wo die Dateien rein kommen.
                 String targetClientDirectory = new File("" + targetClientID).getAbsolutePath();
 
-
                 while (incomingListSize > 0) {
                     String fileName = dis.readUTF();
 
                     System.err.println("SERVER => CLIENT(TARGETID = " + targetClientID + ") FILENAME :: " + fileName);
-                    fos = new FileOutputStream(targetClientDirectory + "\\" + fileName);
+                    fos = new FileOutputStream(targetClientDirectory + "\\" +clientID+"_"+fileName);
                     dos = new DataOutputStream(fos);
                     int currentFileSize = dis.readInt();
                     int tmp;
