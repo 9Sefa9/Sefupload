@@ -1,0 +1,15 @@
+.button{
+-fx-background-color: rgb(25,142,112);
+    -fx-text-fill: White;
+-fx-border-color: #464646;
+
+}
+.button:focused:hover{
+    -fx-border-color: Black;
+    -fx-text-fill: White;
+    -fx-background-color: red;
+}
+.button:selected{
+    -fx-background-color:blue;
+
+}

@@ -18,13 +18,16 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.List;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+//TODO Button events von accept unr reject erstellen. Progres Bar mit Task für XLoad erstellen
 public class Controller implements Serializable {
     private int id;
     private List<File> fileList;
     private FileChooser fileChooser;
     private Model model;
     private double xOffset = 0, yOffset=0;
+    private Button accept,reject;
     @FXML private Pane pane;
     @FXML private ListView<File> uploadList;
     @FXML private ListView<String> downloadList;
@@ -37,6 +40,10 @@ public class Controller implements Serializable {
     @FXML
     public void initialize(){
         model = new Model();
+        accept = new Button("Accept");
+        reject = new Button("Reject");
+        accept.getStylesheets().add("/css/Button.css");
+        reject.getStylesheets().add("/css/Button.css");
         uploadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ThreadClientID t = new ThreadClientID(this);
@@ -99,7 +106,7 @@ public class Controller implements Serializable {
     }
     @FXML
     public void closeProgram(){
-        Platform.exit();
+        System.exit(0);
     }
     public Label getIdLabel() {
         return this.idLabel;
@@ -119,8 +126,15 @@ public class Controller implements Serializable {
         this.textFieldID = textFieldID;
     }
 
-    public ListView<String> getDownloadList() {
+    public synchronized ListView<String> getDownloadList() {
         return downloadList;
+    }
+
+    public Button getAccept() {
+        return this.accept;
+    }
+    public Button getReject() {
+        return this.reject;
     }
 }
 

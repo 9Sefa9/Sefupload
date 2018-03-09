@@ -4,9 +4,17 @@ import controller.Controller;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /*Diese Klasse, received regelmäßig, die von anderen empfangene Daten*/
 public class DownloadClient implements Runnable,Serializable {
 
@@ -47,13 +55,33 @@ public class DownloadClient implements Runnable,Serializable {
                         @Override
                         public void run() {
                             controller.getDownloadList().setItems(fileList.sorted());
-                        }
-                    });
+
+                            controller.getDownloadList().setCellFactory(c -> {
+                                        ListCell<String> cell = new ListCell<String>() {
+                                            @Override
+                                            protected void updateItem(String myObject, boolean b) {
+                                                super.updateItem(myObject, myObject == null || b);
+                                                if (myObject != null) {
+                                                    HBox hbox = new HBox();
+                                                    hbox.getChildren().addAll(controller.getAccept(),controller.getReject());
+                                                    setGraphic(hbox);
+                                                    setText(myObject);
+                                                } else {
+                                                    // wichtig da sonst der text stehen bleibt!
+                                                    setText("");
+                                                }
+                                            }
+                                        };
+                                        return cell;
+                            });
+			            }
+			        });
 
                     Thread.sleep(5000);
                 }
             } catch(IOException|ClassNotFoundException |InterruptedException e){
-                System.err.print("SERVER => CLIENT :: Irgend etwas ist schief gelaufen bei der Übertragung!:");
+
+            //System.err.print("SERVER => CLIENT :: Irgend etwas ist schief gelaufen bei der Übertragung!:");
                 e.printStackTrace();
             }
     }

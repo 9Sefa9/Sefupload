@@ -6,8 +6,11 @@ import javafx.collections.ObservableList;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DownloadServer implements Serializable{
     private ServerSocket server;
@@ -33,6 +36,10 @@ public class DownloadServer implements Serializable{
 
 class ThreadDownloadServer extends Thread implements Serializable {
     private Socket client;
+    ObjectInputStream ois = null;
+    ObjectOutputStream oos = null;
+    ArrayList<String> tmp=null;
+    int clientID = (-1);
 
     public ThreadDownloadServer(Socket client) {
         this.client = client;
@@ -40,14 +47,12 @@ class ThreadDownloadServer extends Thread implements Serializable {
 
     @Override
     public void run() {
-        ObjectInputStream ois = null;
-        ObjectOutputStream oos = null;
-        ArrayList<String> tmp=null;
+
         try {
             oos = new ObjectOutputStream(client.getOutputStream());
             ois = new ObjectInputStream(client.getInputStream());
 
-            int clientID = ois.readInt();
+            clientID = ois.readInt();
             while(true) {
 
                 if ((new File("" + clientID).listFiles()) != null) {
@@ -64,7 +69,18 @@ class ThreadDownloadServer extends Thread implements Serializable {
                 oos.flush();
                 Thread.sleep(5000);
             }
-        } catch (IOException| InterruptedException e) {
+        } catch(SocketException s){
+            System.err.println("CLIENT DISCONNECTED! DELETING FILES IN DIR : "+this.clientID);
+            try {
+                File[] clientFiles = new File("" + clientID).listFiles();
+                for (File f : clientFiles) {
+                    f.delete();
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        } catch(IOException| InterruptedException e) {
             System.err.print("CLIENT => SERVER :: Irgend etwas ist schief gelaufen bei der Übertragung!:");
             e.printStackTrace();
         }
