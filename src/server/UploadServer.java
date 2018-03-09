@@ -10,7 +10,7 @@ public class UploadServer {
     public static void main(String[] args){
         new UploadServer();
     }
-    private UploadServer(){
+    public UploadServer(){
         try{
             server = new ServerSocket(3122);
             System.out.println("UPLOAD SERVER STARTED");

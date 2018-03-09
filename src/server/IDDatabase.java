@@ -35,8 +35,10 @@ public class IDDatabase {
             s.printStackTrace();
         }
     }
-
     public synchronized int createID(){
+        return 1234;
+    }
+ /*   public synchronized int createID(){
         try{
             stmnt = con.createStatement();
             rs = stmnt.executeQuery("SELECT ClientID, ClientInformation FROM IDTable;");
@@ -103,7 +105,7 @@ public class IDDatabase {
         }
 
         return this.newID;
-    }
+    }*/
     public synchronized int generateNewID(){
             UUID id = UUID.randomUUID();
             char [] n = id.toString().substring(0,6).toCharArray();

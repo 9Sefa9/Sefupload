@@ -19,7 +19,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.util.List;
 
-public class Controller {
+public class Controller implements Serializable {
     private int id;
     private List<File> fileList;
     private FileChooser fileChooser;
@@ -41,10 +41,6 @@ public class Controller {
 
         ThreadClientID t = new ThreadClientID(this);
         t.start();
-
-        Thread t2 = new Thread(new DownloadClient(this));
-        t2.start();
-
 
     }
 
@@ -154,10 +150,14 @@ class ThreadClientID extends Thread{
 
             int newID = br.read();
             System.err.println("CLIENT => SERVER :: ID RETRIVED..."+ client.getInetAddress().getHostName() +" ID: "+newID);
+
             Platform.runLater(new Runnable() {
                 @Override public void run() {
                     controller.setId(newID);
                     controller.getIdLabel().setText("Deine ID:"+newID);
+
+                    Thread t2 = new Thread(new DownloadClient(controller,newID));
+                    t2.start();
                 }
             });
 
