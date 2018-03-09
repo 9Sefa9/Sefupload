@@ -11,6 +11,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
 import model.DownloadClient;
+import model.RefreshClient;
 import model.Model;
 import model.UploadClient;
 
@@ -18,8 +19,7 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 //TODO Button events von accept unr reject erstellen. Progres Bar mit Task für XLoad erstellen
 public class Controller implements Serializable {
     private int id;
@@ -49,6 +49,10 @@ public class Controller implements Serializable {
         ThreadClientID t = new ThreadClientID(this);
         t.start();
 
+        this.accept.setOnAction(e->{
+            DownloadClient dc = new DownloadClient(this);
+            dc.start();
+        });
     }
 
     @FXML
@@ -170,7 +174,7 @@ class ThreadClientID extends Thread{
                     controller.setId(newID);
                     controller.getIdLabel().setText("Deine ID:"+newID);
 
-                    Thread t2 = new Thread(new DownloadClient(controller,newID));
+                    Thread t2 = new Thread(new RefreshClient(controller,newID));
                     t2.start();
                 }
             });
