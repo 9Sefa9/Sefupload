@@ -27,7 +27,7 @@ public class Controller implements Serializable {
     private double xOffset = 0, yOffset=0;
     @FXML private Pane pane;
     @FXML private ListView<File> uploadList;
-    @FXML private ListView<File> downloadList;
+    @FXML private ListView<String> downloadList;
     @FXML protected Label idLabel;
     @FXML private Button deleteButton;
     @FXML private TextField textFieldID;
@@ -119,7 +119,7 @@ public class Controller implements Serializable {
         this.textFieldID = textFieldID;
     }
 
-    public ListView<File> getDownloadList() {
+    public ListView<String> getDownloadList() {
         return downloadList;
     }
 }
@@ -163,7 +163,7 @@ class ThreadClientID extends Thread{
 
 
         }catch(ConnectException c){
-            System.err.println("Server connection refused!");
+            System.err.print("CLIENT => SERVER :: Irgend etwas ist schief gelaufen bei der ID Übertragung!...:");
             Platform.runLater(new Runnable() {
                 @Override public void run() {
                     controller.getIdLabel().setText("Keine Internetverbindung!");

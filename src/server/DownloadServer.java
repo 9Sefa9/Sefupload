@@ -42,31 +42,31 @@ class ThreadDownloadServer extends Thread implements Serializable {
     public void run() {
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
-        ArrayList<File> tmp=null;
+        ArrayList<String> tmp=null;
         try {
             oos = new ObjectOutputStream(client.getOutputStream());
             ois = new ObjectInputStream(client.getInputStream());
 
             int clientID = ois.readInt();
-            if((new File("" + clientID).listFiles())!=null ) {
-                tmp= new ArrayList<>(Arrays.asList(new File("" + clientID).listFiles()));
-            }
+            while(true) {
 
-            oos.writeObject(tmp);
-            oos.flush();
+                if ((new File("" + clientID).listFiles()) != null) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                if (ois != null)
-                    ois.close();
-                if(oos!=null){
-                    oos.close();
+                    tmp = new ArrayList<>();
+                    File[] f = new File("" + clientID).listFiles();
+
+                    for(File files:f)
+                        tmp.add(files.getName());
+
                 }
-            }catch (Exception e ){
-                e.printStackTrace();
+
+                oos.writeObject(tmp);
+                oos.flush();
+                Thread.sleep(5000);
             }
+        } catch (IOException| InterruptedException e) {
+            System.err.print("CLIENT => SERVER :: Irgend etwas ist schief gelaufen bei der Übertragung!:");
+            e.printStackTrace();
         }
     }
 }

@@ -1,11 +1,13 @@
 package model;
 
 import controller.Controller;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+/*Diese Klasse, received regelmäßig, die von anderen empfangene Daten*/
 public class DownloadClient implements Runnable,Serializable {
 
     private Controller controller;
@@ -26,38 +28,33 @@ public class DownloadClient implements Runnable,Serializable {
     public void run(){
         ObjectInputStream ois=null;
         ObjectOutputStream oos =null;
+        ArrayList<String> tmp=null;
         try {
-            if(this.socket==null)
-                System.out.println("test");
+
             ois= new ObjectInputStream(this.socket.getInputStream());
             oos = new ObjectOutputStream(this.socket.getOutputStream());
 
+                //sende eigene ID
                 oos.writeInt(id);
                 oos.flush();
+                while(true) {
+                    //empfange ArrayList
+                    tmp = (ArrayList<String>) ois.readObject();
 
-                ArrayList<File> tmp=null;
+                    //Formatiere es für ListView
+                    ObservableList fileList = FXCollections.observableList(tmp);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            controller.getDownloadList().setItems(fileList.sorted());
+                        }
+                    });
 
-
-                tmp = (ArrayList<File>)ois.readObject();
-                for(int i = 0; i<tmp.size();i++){
-                    System.out.println(tmp.get(i));
+                    Thread.sleep(5000);
                 }
-
-                ObservableList fileList = FXCollections.observableList(tmp);
-                controller.getDownloadList().setItems(fileList);
-
-            } catch(IOException|ClassNotFoundException e){
-                e.printStackTrace();
-            }finally {
-            try {
-                if (ois != null)
-                    ois.close();
-                if(oos!=null){
-                    oos.close();
-                }
-            }catch (Exception e ){
+            } catch(IOException|ClassNotFoundException |InterruptedException e){
+                System.err.print("SERVER => CLIENT :: Irgend etwas ist schief gelaufen bei der Übertragung!:");
                 e.printStackTrace();
             }
-        }
     }
 }
