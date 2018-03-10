@@ -51,6 +51,9 @@ public class RefreshClient implements Runnable,Serializable {
 
                     //Formatiere es für ListView
                     ObservableList fileList = FXCollections.observableList(tmp);
+                    for(int i = 0 ; i<fileList.size();i++){
+                        System.out.println(fileList.get(i));
+                    }
                     if(fileList != null) {
                         Platform.runLater(new Runnable() {
                             @Override

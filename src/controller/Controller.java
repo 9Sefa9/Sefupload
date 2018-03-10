@@ -29,6 +29,7 @@ public class Controller implements Serializable {
     private Model model;
     private double xOffset = 0, yOffset=0;
     private Button accept,reject;
+    private HBox hbox;
     @FXML private Pane pane;
     @FXML private ListView<File> uploadList;
     @FXML private ListView<String> downloadList;
@@ -41,29 +42,37 @@ public class Controller implements Serializable {
     @FXML
     public void initialize(){
         model = new Model();
-        accept = new Button("Accept");
-        reject = new Button("Reject");
-        accept.getStylesheets().add("/css/Button.css");
-        reject.getStylesheets().add("/css/Button.css");
+
         uploadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ThreadClientID t = new ThreadClientID(this);
         t.start();
 
+
         this.getDownloadList().setCellFactory(c -> {
+
             ListCell<String> cell = new ListCell<String>() {
                 @Override
                 protected void updateItem(String myObject, boolean b) {
                     super.updateItem(myObject, myObject == null || b);
                     if (myObject != null) {
-                        HBox hbox = new HBox();
+                        hbox = new HBox();
+                        accept = new Button("Accept");
+                        accept.setOnAction(e->{
+
+                            downloadList.getItems().add("HI")
+                        });
+                        reject = new Button("Reject");
+                        accept.getStylesheets().add("/css/Button.css");
+                        reject.getStylesheets().add("/css/Button.css");
                         hbox.getChildren().addAll(getAccept(),getReject());
+
+                        setText(" "+myObject);
                         setGraphic(hbox);
-                        setText(myObject);
                     } else {
                         // wichtig da sonst der text stehen bleibt!
-                        setGraphic(null);
                         setText("");
+                        setGraphic(null);
                     }
                 }
             };
