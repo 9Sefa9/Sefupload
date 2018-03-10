@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -49,10 +50,29 @@ public class Controller implements Serializable {
         ThreadClientID t = new ThreadClientID(this);
         t.start();
 
-        this.accept.setOnAction(e->{
+        this.getDownloadList().setCellFactory(c -> {
+            ListCell<String> cell = new ListCell<String>() {
+                @Override
+                protected void updateItem(String myObject, boolean b) {
+                    super.updateItem(myObject, myObject == null || b);
+                    if (myObject != null) {
+                        HBox hbox = new HBox();
+                        hbox.getChildren().addAll(getAccept(),getReject());
+                        setGraphic(hbox);
+                        setText(myObject);
+                    } else {
+                        // wichtig da sonst der text stehen bleibt!
+                        setText("");
+                    }
+                }
+            };
+            return cell;
+        });
+
+        /*this.accept.setOnAction(e->{
             DownloadClient dc = new DownloadClient(this);
             dc.start();
-        });
+        });*/
     }
 
     @FXML

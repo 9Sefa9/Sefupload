@@ -51,32 +51,14 @@ public class RefreshClient implements Runnable,Serializable {
 
                     //Formatiere es für ListView
                     ObservableList fileList = FXCollections.observableList(tmp);
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            controller.getDownloadList().setItems(fileList.sorted());
-
-                            controller.getDownloadList().setCellFactory(c -> {
-                                        ListCell<String> cell = new ListCell<String>() {
-                                            @Override
-                                            protected void updateItem(String myObject, boolean b) {
-                                                super.updateItem(myObject, myObject == null || b);
-                                                if (myObject != null) {
-                                                    HBox hbox = new HBox();
-                                                    hbox.getChildren().addAll(controller.getAccept(),controller.getReject());
-                                                    setGraphic(hbox);
-                                                    setText(myObject);
-                                                } else {
-                                                    // wichtig da sonst der text stehen bleibt!
-                                                    setText("");
-                                                }
-                                            }
-                                        };
-                                        return cell;
-                            });
-			            }
-			        });
-
+                    if(fileList != null) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                controller.getDownloadList().setItems(fileList.sorted());
+                            }
+                        });
+                    }
                     Thread.sleep(5000);
                 }
             } catch(IOException|ClassNotFoundException |InterruptedException e){

@@ -59,8 +59,10 @@ class ThreadRefreshServer extends Thread implements Serializable {
 
                 }
 
-                oos.writeObject(tmp);
-                oos.flush();
+                if(tmp != null) {
+                    oos.writeObject(tmp);
+                    oos.flush();
+                }
                 Thread.sleep(5000);
             }
         } catch(SocketException s){
