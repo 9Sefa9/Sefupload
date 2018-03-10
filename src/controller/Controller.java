@@ -62,6 +62,7 @@ public class Controller implements Serializable {
                         setText(myObject);
                     } else {
                         // wichtig da sonst der text stehen bleibt!
+                        setGraphic(null);
                         setText("");
                     }
                 }
