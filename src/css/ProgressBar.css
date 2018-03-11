@@ -1,3 +1,4 @@
 .progress-bar .bar {
     -fx-background-color: orange;
+    -fx-text-box-border: white;
 }

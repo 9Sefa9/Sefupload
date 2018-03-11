@@ -30,6 +30,8 @@ public class Controller implements Serializable {
     private double xOffset = 0, yOffset=0;
     private Button accept,reject;
     private HBox hbox;
+    private Controller controller;
+    private ProgressBar pbar;
     @FXML private Pane pane;
     @FXML private ListView<File> uploadList;
     @FXML private ListView<String> downloadList;
@@ -42,7 +44,7 @@ public class Controller implements Serializable {
     @FXML
     public void initialize(){
         model = new Model();
-
+        controller = this;
         uploadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ThreadClientID t = new ThreadClientID(this);
@@ -58,13 +60,31 @@ public class Controller implements Serializable {
                     if (myObject != null) {
                         hbox = new HBox();
                         accept = new Button("Accept");
-                        accept.setOnAction(e->{
-
-                            downloadList.getItems().add("HI")
-                        });
                         reject = new Button("Reject");
+
                         accept.getStylesheets().add("/css/Button.css");
                         reject.getStylesheets().add("/css/Button.css");
+                        accept.setOnAction(e->{
+
+                            hbox = new HBox();
+                            reject = new Button("Reject");
+                            pbar = new ProgressBar();
+                            pbar.setMinHeight(34);
+                            pbar.getStylesheets().add("/css/ProgressBar.css");
+                            reject.getStylesheets().add("/css/Button.css");
+                            hbox.getChildren().addAll(pbar,getReject());
+                            setText(" "+myObject);
+                            setGraphic(hbox);
+
+                            Task<Void> task =  new DownloadClient(controller,myObject);
+                            pbar.progressProperty().bind(task.progressProperty());
+                            Thread thread = new Thread(task);
+                            thread.start();
+
+                        });
+                        reject.setOnAction(e->{
+
+                        });
                         hbox.getChildren().addAll(getAccept(),getReject());
 
                         setText(" "+myObject);
