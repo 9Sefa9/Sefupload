@@ -1,6 +1,9 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -8,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
@@ -19,19 +23,19 @@ import model.UploadClient;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.text.NumberFormat;
 import java.util.List;
 
-//TODO Button events von accept unr reject erstellen. Progres Bar mit Task für XLoad erstellen
+//TODO: reject button funktioniert irgendwieeeeeee   nicht ganz richtig. es bleibt i.wie hängen. versuche mit 3 gb!
 public class Controller implements Serializable {
     private int id;
     private List<File> fileList;
     private FileChooser fileChooser;
     private Model model;
     private double xOffset = 0, yOffset=0;
-    private Button accept,reject;
-    private HBox hbox;
     private Controller controller;
-    private ProgressBar pbar;
+    private String oldMyObject = "willBeFilled";
     @FXML private Pane pane;
     @FXML private ListView<File> uploadList;
     @FXML private ListView<String> downloadList;
@@ -57,52 +61,104 @@ public class Controller implements Serializable {
                 @Override
                 protected void updateItem(String myObject, boolean b) {
                     super.updateItem(myObject, myObject == null || b);
-                    if (myObject != null) {
-                        hbox = new HBox();
-                        accept = new Button("Accept");
-                        reject = new Button("Reject");
+                    try {
+                        String path = DownloadClient.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+                        String decodedPath = URLDecoder.decode(path, "UTF-8");
+
+                    if (myObject != null && !new File(decodedPath+myObject).exists()) {
+
+                        final Button accept = new Button("Accept");
+                        final Button reject = new Button("Reject");
+                        final Task<Void> downloadTask = new DownloadClient(controller, myObject);
+                        final Thread downloadThread = new Thread(downloadTask);
+                        final HBox hbox = new HBox();
+                        final ProgressBar pbar = new ProgressBar();
 
                         accept.getStylesheets().add("/css/Button.css");
                         reject.getStylesheets().add("/css/Button.css");
-                        accept.setOnAction(e->{
 
-                            hbox = new HBox();
-                            reject = new Button("Reject");
-                            pbar = new ProgressBar();
+                        //wenn accept ist angeklickt
+                        accept.setOnAction(e -> {
+
                             pbar.setMinHeight(34);
                             pbar.getStylesheets().add("/css/ProgressBar.css");
                             reject.getStylesheets().add("/css/Button.css");
-                            hbox.getChildren().addAll(pbar,getReject());
-                            setText(" "+myObject);
+                            hbox.getChildren().clear();
+                            hbox.getChildren().addAll(pbar, reject);
+                            setText(" " + myObject);
                             setGraphic(hbox);
 
-                            Task<Void> task =  new DownloadClient(controller,myObject);
-                            pbar.progressProperty().bind(task.progressProperty());
-                            Thread thread = new Thread(task);
-                            thread.start();
+                            pbar.progressProperty().bind(downloadTask.progressProperty());
+                            downloadThread.start();
+                            if(downloadThread.isAlive()){
+                                hbox.getChildren().remove(reject);
+
+                                pbar.progressProperty().addListener(new ChangeListener<Number>() {
+                                    @Override
+                                    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                                        setText(" "+(newValue.doubleValue()*100)+"%/100%"+" name: "+myObject);
+                                    }
+                                });
+
+
+                            }
 
                         });
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (true) {
+                                    if (downloadTask.isDone()) {
+                                        Platform.runLater(() -> {
+                                            HBox hbox = new HBox();
+                                            hbox.getChildren().add(new Label("Download done: "));
+                                            setText("" + myObject);
+                                            setGraphic(hbox);
+                                        });
+                                        break;
+                                    }
+                                    if (downloadTask.isCancelled()) {
+                                        Platform.runLater(() -> {
+                                            hbox.getChildren().clear();
+                                            hbox.getChildren().add(new Label("Download canceled!: "));
+                                            setText("" + myObject);
+                                            setGraphic(hbox);
+                                        });
+                                        break;
+                                    }
+                                }
+                            }
+                        }).start();
+
+                        //wenn reject ausgewählt wurde
                         reject.setOnAction(e->{
+                          hbox.getChildren().clear();
+                          setGraphic(null);
+                          downloadTask.cancel();
+                         // downloadList.getItems().remove(downloadList.getItems().indexOf(myObject)); auskommentiert, weil update zeigt wieder an.
+
 
                         });
-                        hbox.getChildren().addAll(getAccept(),getReject());
 
-                        setText(" "+myObject);
-                        setGraphic(hbox);
-                    } else {
-                        // wichtig da sonst der text stehen bleibt!
+                            hbox.getChildren().addAll(accept, reject);
+
+                            setText(" " + myObject);
+                            setGraphic(hbox);
+
+                    }
+
+                    else{
                         setText("");
                         setGraphic(null);
+                    }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             };
             return cell;
         });
-
-        /*this.accept.setOnAction(e->{
-            DownloadClient dc = new DownloadClient(this);
-            dc.start();
-        });*/
     }
 
     @FXML
@@ -184,14 +240,7 @@ public class Controller implements Serializable {
         return downloadList;
     }
 
-    public Button getAccept() {
-        return this.accept;
-    }
-    public Button getReject() {
-        return this.reject;
-    }
 }
-
 
 
 class ThreadClientID extends Thread{

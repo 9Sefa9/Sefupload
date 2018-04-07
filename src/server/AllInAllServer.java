@@ -11,6 +11,8 @@ public class AllInAllServer {
         new Thread(()->{
             new UploadServer();
         }).start();
-
+        new Thread(()->{
+            new DownloadServer();
+        });
     }
 }

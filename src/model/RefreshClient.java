@@ -3,6 +3,7 @@ package model;
 import controller.Controller;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -51,14 +52,11 @@ public class RefreshClient implements Runnable,Serializable {
 
                     //Formatiere es für ListView
                     ObservableList fileList = FXCollections.observableList(tmp);
-                    for(int i = 0 ; i<fileList.size();i++){
-                        System.out.println(fileList.get(i));
-                    }
                     if(fileList != null) {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                controller.getDownloadList().setItems(fileList.sorted());
+                                controller.getDownloadList().setItems(fileList);
                             }
                         });
                     }
